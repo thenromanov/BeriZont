@@ -3,38 +3,45 @@
     <form class="register-form" action="" method="post">
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        <h2>Регистрация</h2>
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(class='form-control', type='email' )}}<br>
-            {% for error in form.email.errors %}
-                <p class="alert alert-danger" role="alert">{{ error }}</p>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(class="form-control", type="password")}}<br>
-            {% for error in form.password.errors %}
-                <p class="alert alert-danger" role="alert">{{ error }}</p>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.passwordRepeat.label }}<br>
-            {{ form.passwordRepeat(class="form-control", type="password")}}<br>
-            {% for error in form.passwordRepeat.errors %}
-                <p class="alert alert-danger" role="alert">{{ error }}</p>
-            {% endfor %}
-        </p>
-        {% for field in form if field.name not in ['csrf_token', 'email', 'password', 'passwordRepeat', 'submit'] %}
-            <p>
-                {{ field.label }}<br>
-                {{ field(class="form-control") }}<br>
-                {% for error in field.errors %}
+        <div class="d-flex flex-column justify-content-center">
+            <h2 class="p-2">Регистрация</h2>
+            <div class="p-2 form-floating mb-3">
+                {{ form.email(type="email", class="form-control", id="floatingInput", placeholder="name@example.com") }}
+                <label for="floatingInput">{{ form.email.label }}</label>
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="p-2 form-floating mb-3">
+                {{ form.password(type="password", class="form-control", id="floatingPassword", placeholder="Password") }}
+                <label for="floatingPassword">{{ form.password.label }}</label>
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="p-2 form-floating mb-3">
+                {{ form.passwordRepeat(class="form-control", id="floatingPasswordRepeat", placeholder="Password") }}
+                <label for="floatingPasswordRepeat">{{ form.passwordRepeat.label }}</label>
+                {% for error in form.passwordRepeat.errors %}
                     <p class="alert alert-danger" role="alert">{{ error }}</p>
                 {% endfor %}
-            </p>
-        {% endfor %}
-        <p>{{ form.submit(type="submit", class="btn btn-dark") }}</p>
-        <div>{{ message }}</div>
+            </div>
+            <div class="p-2 form-floating mb-3">
+                {{ form.surname(class="form-control", id="floatingSurname", placeholder="Surname") }}
+                <label for="floatingSurname">{{ form.surname.label }}</label>
+                {% for error in form.surname.errors %}
+                    <p class="alert alert-danger" role="alert">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="p-2 form-floating mb-3">
+                {{ form.name(class="form-control", id="floatingName", placeholder="Name") }}
+                <label for="floatingName">{{ form.name.label }}</label>
+                {% for error in form.name.errors %}
+                    <p class="alert alert-danger" role="alert">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <p class="p-2">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+            <div class="p-2">{{ message }}</div>
+        </div>
     </form>
 {% endblock %}

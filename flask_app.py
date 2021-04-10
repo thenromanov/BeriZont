@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, make_response, jsonify, url_for
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, length
 from secrets import token_urlsafe
@@ -31,6 +31,10 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
+class DeviceForm(FlaskForm):
+    number = IntegerField('Номер устройства', validators=[DataRequired()])
+    submit = SubmitField()
+
 
 @loginManager.user_loader
 def loadUser(id):
@@ -54,7 +58,8 @@ def register():
             return render_template('register.html', title='Регистрация', form=form, message='Пользователь уже существует')
         user = User(email=form.email.data,
                     surname=form.surname.data,
-                    name=form.name.data)
+                    name=form.name.data,
+                    onRent=False)
         user.setPassword(form.password.data)
         session.add(user)
         session.commit()
@@ -80,6 +85,15 @@ def login():
 def logout():
     logout_user()
     return redirect('/')
+
+
+@app.route('/rent', methods=['GET', 'POST'])
+@login_required
+def rent():
+    form = DeviceForm()
+    if form.validate_on_submit():
+        pass
+    return render_template('rent.html', title='Прокат', form=form)
 
 
 def main():
