@@ -1,4 +1,5 @@
-from sqlalchemy import orm, Integer, String, Column, Boolean
+from sqlalchemy import orm, Integer, String, Column, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from .dbSession import SqlAlchemyBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -12,8 +13,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     surname = Column(String, nullable=True)
     name = Column(String, nullable=True)
     email = Column(String, index=True, unique=True, nullable=True)
-    onRent = Column(Boolean, nullable=True)
-
+    onRent = Column(Boolean, nullable=True);
     hashedPassword = Column(String, nullable=True)
 
     def __repr__(self):

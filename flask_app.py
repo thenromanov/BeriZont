@@ -1,16 +1,20 @@
 from flask import Flask, render_template, redirect, request, make_response, jsonify, url_for
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_restful import Api
 from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, length
 from secrets import token_urlsafe
 from data import dbSession
 from data.users import User
+from data.devices import Device
+from api import devicesResources
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = token_urlsafe(16)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/berizont.db'
+api = Api(app)
 
 loginManager = LoginManager()
 loginManager.init_app(app)
@@ -92,12 +96,24 @@ def logout():
 def rent():
     form = DeviceForm()
     if form.validate_on_submit():
-        pass
+        session = dbSession.createSession()
+        user = session.query(User).get(current_user.id)
+        if user.onRent:
+            return render_template('rent.html', title='Прокат', form=form, message='Вы не можете взять в аренду более одного зонта!')
+        device = session.query(Device).get(form.number.data)
+        if not device:
+            return render_template('rent.html', title='Прокат', form=form, message='Вы ввели неправильный номер устройства!')
+        device.state = True
+        user.onRent = True
+        session.commit()
+        return redirect('/')
     return render_template('rent.html', title='Прокат', form=form)
+
 
 
 def main():
     dbSession.globalInit('db/berizont.db')
+    api.add_resource(devicesResources.DevicesResource, '/api/device')
     app.run()
 
 

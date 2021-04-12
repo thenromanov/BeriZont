@@ -3,7 +3,7 @@
     <form class="rent-form" action="" method="post">
         {{ form.hidden_tag() }}
         <div class="d-flex flex-column justify-content-center">
-            <h2 class="p-2">Введите номер устройства{% if current_user.onRent %}, в которое вы хотите вернуть {% else %}, из которого вы хотите взять {% endif %} зонт </h2>
+            <h2 class="p-2">Введите номер устройства, из которого вы хотите взять зонт </h2>
             <div class="p-2 form-floating mb-3">
                 {{ form.number(class="form-control", id="floatingInput", placeholder=1) }}
                 <label for="floatingInput">{{ form.number.label }}</label>
@@ -11,7 +11,7 @@
                     <div class="alert alert-danger" role="alert">{{ error }}</div>
                 {% endfor %}
             </div>
-            <p class="p-2 align-self-center">{{ form.submit(type="submit", class="btn btn-lg btn-dark", value='Вернуть' if current_user.onRent else 'Взять') }}</p>
+            <p class="p-2 align-self-center">{{ form.submit(type="submit", class="btn btn-lg btn-dark", value='Взять') }}</p>
             <div class="p-2">{{ message }}</div>
         </div>
     </form>
